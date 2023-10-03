@@ -1,0 +1,101 @@
+## Assigntment 1
+
+## Task 3
+
+if (!require("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+BiocManager::install()
+install.packages("tidyverse")
+library(BiocManager)
+library(tidyverse)
+
+
+## Task 4
+
+# 4.1
+data("CO2")
+
+# 4.2
+?"CO2"
+
+
+# 4.3
+CO2_results = as.data.frame(CO2 %>%
+  group_by(Type) %>%
+  summarise(meanUptake=mean(uptake), medianUptake=median(uptake), meanConc=mean(conc), medianConc=median(conc))
+)
+
+# 4.4
+
+
+## Task 5
+
+# 5.1 - The function "fun_ratio" calculates the ratio of mean / median
+fun_ratio = function(x){
+  ratio = mean(x) / median(x)
+  return(ratio)
+}
+
+y = c(1,2,3,10,0)
+
+fun_ratio(y)
+
+# 5.2 - Write a function that ignores the lowest and the highest value from a given vector and calculate the mean.
+fun_NoExtremes = function(x) {
+  if (length(x) < 3) {
+    stop("Vector must have at least 3 elements")
+  }
+  
+  # Sort vector in ascending order
+  sorted_x = sort(x)
+  
+  # Remove the lowest (first) and highest (last) values
+  NoExtremes = sorted_x[-c(1, length(sorted_x))]
+  
+  # Calculate the mean of the new vector
+  mean_value = mean(NoExtremes)
+  
+  return(mean_value)
+}
+
+fun_NoExtremes(y)
+
+# 5.3 - Write a short (max. 300 characters, no spaces) explanation of why, how, and when not to use pipes.
+
+# 5.4 - Write a short explanation the apply-family (max. 300 characters, no spaces) of why they could be useful in your work.
+
+## Task 6
+
+install.packages("remotes")
+library(remotes)
+install_url("http://emotion.utu.fi/wp-content/uploads/2019/11/nummenmaa_1.0.tar.gz",dependencies=TRUE)
+
+magic_guys = read.csv("magic_guys.csv")
+
+# 6.1a
+
+hist(magic_guys$length)
+
+ggplot(magic_guys, aes(magic_guys$length, color = magic_guys$species))+
+  geom_histogram()
+
+
+# 6.1b
+
+ggplot(magic_guys, aes(magic_guys$species, magic_guys$length, fill = magic_guys$species))+
+  geom_boxplot()+
+  geom_col()
+  
+# 6.1c
+
+# 6.2a
+microarray_data = read.delim("microarray_data.tab", header = TRUE, sep = "\t", quote = "")
+
+str(microarray_data)
+
+    ## 553 rows, 1000 columns
+
+# 6.2b
+
+missing_values = is.na(microarray_data)
+missing_quant = colSums(missing_values)
