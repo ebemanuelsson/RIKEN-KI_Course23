@@ -87,6 +87,9 @@ ggplot(magic_guys, aes(magic_guys$species, magic_guys$length, fill = magic_guys$
   geom_col()
   
 # 6.1c
+ggsave("plot.png", plot = last_plot(), width = 5, height = 5)
+ggsave("plot.pdf", plot = last_plot(), width = 5, height = 5)
+ggsave("plot.svg", plot = last_plot(), width = 5, height = 5)
 
 # 6.2a
 microarray_data = read.delim("microarray_data.tab", header = TRUE, sep = "\t", quote = "")
@@ -97,5 +100,34 @@ str(microarray_data)
 
 # 6.2b
 
-missing_values = is.na(microarray_data)
-missing_quant = colSums(missing_values)
+missing_values = as.data.frame(is.na(microarray_data))
+missing_quant = (colSums(missing_values))
+
+gene_names = rownames(missing_quant)
+missing_quant$gene_name = gene_names
+
+missing_quant_df = missing_quant
+
+ggplot(missing_quant, aes(missing_quant$gene_name, missing_quant_df$`colSums(missing_values)`))+
+  geom_point()+
+  theme_classic()
+
+# 6.2c
+
+percent_na = function(x){
+  result = (x/nrow(microarray_data)) * 100
+
+}
+
+result = lapply(missing_quant, percent_na)
+
+indi_10_20 = which(result > 10 & result <= 20)
+indi_20_50 = which(result > 20 & result <= 50)
+indi_50_100 = which(result > 50)
+
+# 6.2d
+
+for (c in colnames(microarray_data)) {
+  av_expression = mean(microarray_data [[c]], na.rm = TRUE)  # Calculate the column mean excluding NAs
+  microarray_data[[c]][is.na(microarray_data[[c]])] <- av_expression  # Replace NA with the mean
+}
