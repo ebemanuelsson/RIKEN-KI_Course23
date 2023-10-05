@@ -1,5 +1,27 @@
 ## Assigntment 1
 
+## Task 1 - Answer the following questions
+    # a. What is the medically relevant insight from the article?
+    The current paper describes the transcriptional response to insulin in obese and non-obese individuals. 
+    It shows that 78 genes were attenuated in the obese state compared with the non-obese state, thus "normalized" in the post-obese (PO) state. 
+    The genes normalized in the PO state could be interesting to target as an attempt to improve the overall health of obese individuals.
+    # b. Which genomics technology/ technologies were used?
+    5' CAGE Profiling.
+
+#  3. Further related research questions
+    # a. List and explain at least three questions/ hypotheses you can think of that extend the analysis presented in the paper.
+    1 - Does the WAT contain baseline (fasting) differences in genes expression in in the obese, post-obese state and never obese?
+    2 - Which genes are most strongly correlated with the baseline characteristics such as free fatty acid levels, fat cell size, insulin
+        both at baseline and in response to insulin?
+    3 - Are the mitochondrial pathways impared in the obese state in response to insulin? 
+        If so, are the same pathways normalized in the PO state or different in the never obese individuals?
+    # b. [Optional] Devise a computational analysis strategy for (some of) the listed questions under 3a.
+        By using the MitoCarta, one could isolate known mitochondrial proteins from the identified genes in the current dataset. 
+        In a next step, one can perform a gene-set enrichment analysis of mitochondrial pathways, MitoPathways3.0 provided by the MitoCarta dataset.
+
+
+## Task 2 - Git repositories and R Markdown
+
 ## Task 3
 
 if (!require("BiocManager", quietly = TRUE))
