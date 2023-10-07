@@ -39,86 +39,98 @@ data("CO2")
 
 # 4.2
 ?"CO2"
-
+    # The CO2 data is a data frame with 84 rows and 5 columns. 
+    # The data was collected in and experiment on the cold tolerance of the grass Echinochloa crus-galli.
+    # The Co2 uptake was measured at several levels of ambient CO2 concentrations
 
 # 4.3
-CO2_results = as.data.frame(CO2 %>%
-  group_by(Type) %>%
-  summarise(meanUptake=mean(uptake), medianUptake=median(uptake), meanConc=mean(conc), medianConc=median(conc))
+CO2_results = as.data.frame(CO2 %>% # make a data frame called "CO2_results
+  group_by(Type) %>% # divide the plants into two separate rows based on "type"
+  summarise(meanUptake=mean(uptake), medianUptake=median(uptake), meanConc=mean(conc), medianConc=median(conc)) # summary statistics of mean & median
 )
 
-# 4.4
+CO2_results # Prints the output
+            # The plants from Quebec have a higher average CO2 uptaked than the plants from Mississippi
+
+# 4.4 [Optional]
 
 
 ## Task 5
 
 # 5.1 - The function "fun_ratio" calculates the ratio of mean / median
 fun_ratio = function(x){
-  ratio = mean(x) / median(x)
-  return(ratio)
-}
+  mean(x) / median(x)
+  }
 
 y = c(1,2,3,10,0)
 
-fun_ratio(y)
+fun_ratio(y) # The ratio of the mean and median of our vector y equals 1.6. 
+            # This was an exercise to write your own function. The function will save a lot of time in the long run as 
+            # you only have to input the data and not do the entire calculations every time.
 
 # 5.2 - Write a function that ignores the lowest and the highest value from a given vector and calculate the mean.
 fun_NoExtremes = function(x) {
-  if (length(x) < 3) {
-    stop("Vector must have at least 3 elements")
+  if (length(x) < 3) { # The input needs to be at least 3 elements.
+    stop("Vector must have at least 3 elements") # If less than 3 elements exist, the function will stop the analysis and print the text on this line.
   }
-  
-  # Sort vector in ascending order
-  sorted_x = sort(x)
-  
-  # Remove the lowest (first) and highest (last) values
-  NoExtremes = sorted_x[-c(1, length(sorted_x))]
-  
-  # Calculate the mean of the new vector
-  mean_value = mean(NoExtremes)
-  
+ 
+  sorted_x = sort(x)  # Sort vector in ascending order
+  NoExtremes = sorted_x[-c(1, length(sorted_x))]  # Remove the lowest (first) and highest (last) values
+  mean_value = mean(NoExtremes)  # Calculate the mean of the new vector
   return(mean_value)
 }
 
-fun_NoExtremes(y)
+fun_NoExtremes(y) # Removes the highest and lowest value in the vector "y" and calculates the mean of my vector. Mean = 2 when 0 and 10 is removed from the vector.
+                  # This exercise taught me how to get rid of the first and last value of a list. It also challenged me to include a "stop" command in the code. 
 
 # 5.3 - Write a short (max. 300 characters, no spaces) explanation of why, how, and when not to use pipes.
+    # Pipes are good to use when you want to reduce excess intermediate steps in your code and to make it easier to read.
+    # However, pipes should not be used if you have more than one input or output. One should also avoid pipes if you have
+    # a lot of steps in your code, as it could make it harder to trouble shoot your code
 
 # 5.4 - Write a short explanation the apply-family (max. 300 characters, no spaces) of why they could be useful in your work.
+    # Apply functions streamline repetitive tasks by applying a function to each element or column in a data structure, 
+    # this will enhance efficiency, save time and make sure the same  function is used for every column. 
 
 ## Task 6
 
 install.packages("remotes")
 library(remotes)
 install_url("http://emotion.utu.fi/wp-content/uploads/2019/11/nummenmaa_1.0.tar.gz",dependencies=TRUE)
-
 magic_guys = read.csv("magic_guys.csv")
 
 # 6.1a
 
-hist(magic_guys$length)
+hist(magic_guys$length) # Histogram made with base R
 
-ggplot(magic_guys, aes(magic_guys$length, color = magic_guys$species))+
-  geom_histogram()
+ggplot(magic_guys, aes(length, fill = species))+ # Calling the data and aesthetics. Decided to have a fill color for the different species.
+  geom_histogram(binwidth = 8)+ # Histogram made with ggplot. Changed the bin width to make it look better (my subjective opinion)
+  labs(fill = "Species", x = "Length", y = "Count")  # Determine the labels of the figure key ("fill"), x-axis ("length") & y-axis ("Count")
 
+    # The output shows a taller average length of the jedi species compared with the sith.
+    # I think this exercise shows the advantages with ggplot as it easier to manipulate the figure output compared to base R. 
 
 # 6.1b
 
-ggplot(magic_guys, aes(magic_guys$species, magic_guys$length, fill = magic_guys$species))+
-  geom_boxplot()+
-  geom_col()
+ggplot(magic_guys, aes(species, length, fill = species))+
+  geom_boxplot()
+    # A neat way of presenting the both average and the range of our data. The distribution is not as obvious as in the histogram, but I think this figure looks better.
   
-# 6.1c
-ggsave("plot.png", plot = last_plot(), width = 5, height = 5)
+# 6.1c - Save plot as png, pdf and svg respectively
+ggsave("plot.png", plot = last_plot(), width = 5, height = 5) 
+    # I would use png to have figures in a manuscript/word file and the size should not be changed
 ggsave("plot.pdf", plot = last_plot(), width = 5, height = 5)
+    # I would use pdf if I want vectorized figures and want to share with colleagues
 ggsave("plot.svg", plot = last_plot(), width = 5, height = 5)
+    # As above but if I don't have access to adobe. 
 
 # 6.2a
-microarray_data = read.delim("microarray_data.tab", header = TRUE, sep = "\t", quote = "")
+microarray_data = read.delim("microarray_data.tab", header = TRUE, sep = "\t", quote = "") # Load the microarry data matrix
 
-str(microarray_data)
+dim(microarray_data) # check the rows and columns of the data matrix
 
-    ## 553 rows, 1000 columns
+    # 553 rows, 1000 columns
+    # The "dim" function is an easy way of checking the dimensions of the data.
 
 # 6.2b
 
@@ -137,19 +149,107 @@ ggplot(missing_quant, aes(missing_quant$gene_name, missing_quant_df$`colSums(mis
 # 6.2c
 
 percent_na = function(x){
-  result = (x/nrow(microarray_data)) * 100
+  result = (x/nrow(microarray_data)) * 100 # calculates the percentage of NAs by dividing the input data with the number of observations (rows) 
 
 }
 
-result = lapply(missing_quant, percent_na)
+result = lapply(missing_quant, percent_na) # using the lapply function to calculate the percentage of missing values in each gene by using the percent_na function created above. Stored in a list called "result"
 
-indi_10_20 = which(result > 10 & result <= 20)
-indi_20_50 = which(result > 20 & result <= 50)
-indi_50_100 = which(result > 50)
+indi_10_20 = which(result > 10 & result <= 20) # save the genes with 10-20% missing values
+indi_20_50 = which(result > 20 & result <= 50) # save the genes with 20-50% missing values
+indi_50_100 = which(result > 50) # save the genes with > 50% missing values
+
+    # Most (303) genes have missing values in the range of 20-50%, followed by 152 in the range 10-20% and 74 > 50%.
+
 
 # 6.2d
 
-for (c in colnames(microarray_data)) {
-  av_expression = mean(microarray_data [[c]], na.rm = TRUE)  # Calculate the column mean excluding NAs
-  microarray_data[[c]][is.na(microarray_data[[c]])] <- av_expression  # Replace NA with the mean
+for (c in colnames(microarray_data)) { # a for loop used on the microarray dataset.
+  av_expression = mean(microarray_data [[c]], na.rm = TRUE)  # Calculates the column mean and excludes NAs. Saves the output in "av_expresison".
+  microarray_data[[c]][is.na(microarray_data[[c]])] = av_expression  # Replace NA with the mean (saved in "av_expression") of each column. The "ac_expression" is overwritten in each round.
 }
+
+    # The output of the above code replaces the missing values with the average expression of each gene and updates the microarray_data data frame. 
+    # This exercise was good to learn how to use for loops, which saves a lot of times since you don't have to run the same code for 1000 columns manually.
+
+# 6.3 
+
+ggplot(CO2, aes(x=Treatment, y=uptake, fill = Type))+ # As we already knew that the Quebec plants had a higher CO2 uptake than the Mississippi. We now want to investigate the influence of the treatment. 
+  geom_boxplot()
+    # The nonchilled plants had higher average CO2 uptake than the chilled, especially in the plants from Mississippi
+
+
+## Task  7
+install.packages("devtools")
+library(devtools)
+
+devtools::install_github("hirscheylab/tidybiology")
+library(tidybiology)
+
+
+# 7.1a - Extract summary statistics (mean, median and maximum) for the variables variations, protein coding genes, and miRNAs from the chromosome data. 
+       
+    # On the following lines, I used the "summarize" function in tidyverse package.  Results saved as "sum_stats_chromosome".
+
+sum_stats_chromosome = chromosome %>% summarize(mean.variations=mean(variations), #saves mean of "variations" in sum_stats_chromosome as "mean.variations"
+                         sd.variations=sd(variations),  #saves sd of "variations" in sum_stats_chromosome as "sd.variations"
+                         max.variations=max(variations),  #saves maximum value of "variations" in sum_stats_chromosome as "max.variations"
+                         mean.protein_codinggenes=mean(protein_codinggenes), # as above but with mean of protein coding genes
+                         sd.protein_codinggenes=sd(protein_codinggenes), # as above but with sd of protein coding genes
+                         max.protein_codinggenes=max(protein_codinggenes), # as above but with max of protein coding genes
+                         mean.miRNA=mean(mi_rna), # as above but with mean of miRNA
+                         sd.miRNA=sd(mi_rna), # as above but with sd of miRNA
+                         max.miRNA=max(mi_rna) # as above but with max of miRNA
+                         )
+
+sum_stats_chromosome # Presents the output data in a tibble. Cannot draw any conclusions from the output. But it is an easy way of summarizing several basic statistics form a dataset
+
+# 7.1b - How does the chromosome size distribute?
+
+ggplot(chromosome, aes(id, length_mm))+
+  geom_col(aes(fill = id))+
+  labs(x = "chromosome", y = "chromsome length", fill= "chromosome", title = "Size distribution of chromosomes")
+
+    #In general, the chromosome size distributes in a descending order from chromosome 1 to x (which is longer than the previous 15).
+
+# 7.1c - Does the number of protein coding genes and miRNA correlate with the length of the chromosome?
+
+library(ggpubr) # Package that can calculate correlation scores by the "stat_cor" function
+
+ggplot(chromosome, aes(length_mm, protein_codinggenes))+
+  geom_point(aes(size=length_mm))+ # Scatter plot where the size of the dots are determine of the length of the chromosome.
+  stat_cor(method = "pearson", label.x = 20, label.y = 2000)+ # performing a pearson's correlation analysis of the data. Label.x and y determines the position of the printed results
+  labs(x="chromosome length", y="No. of genes") # Determine the labels on the x and y axes of the figure
+
+
+    # It is a strong correlation (R = 0.61) between the number of protein coding genes and the chromosome length.
+    # In this exercise I learned how to include statistics and to visualization the results of it in a plot.
+
+
+ggplot(chromosome, aes(length_mm, mi_rna))+
+  geom_point(aes(size = length_mm))+
+  stat_cor(method = "pearson", label.x = 5, label.y = 150)+
+  labs(x="chromosome length", y = "No. of miRNAs")
+
+    # Ran the correlations for miRNAs in the same way as described in detail for the protein coding genes. 
+    # The results shows a strong correlation between the chromosome length and the number of miRNAs (R = 0.74).
+
+  
+# 7.1d - Calculate the same summary statistics for the ‘proteins’ data variables length and mass. Create a meaningful visualization of the relationship between
+        # these two variables by utilizing the ggplot2 package functions.
+
+    # I ran the same summary statistics as above (task 7.1a), but with the new variables. 
+
+sum_stats_proteins = as.data.frame(proteins%>% summarise(mean.length=mean(length),
+                      sd.length=sd(length),
+                      max.length=max(length),
+                      mean.mass=mean(mass),
+                      sd.mass=sd(mass),
+                      max.mass=max(mass))
+)
+
+ggplot(proteins, aes(log2(length), log2(mass)))+ # define the data. used log2 of length and mass since we had an "outlier" that made the plot less clear.
+  geom_point()+ # Presented the data as a scatterplot 
+  theme_light() # changed the theme of the figure. 
+  
+# It is a very strong correlation between mass and length in the protein dataset.
