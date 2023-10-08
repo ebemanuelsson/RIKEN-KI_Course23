@@ -134,17 +134,21 @@ dim(microarray_data) # check the rows and columns of the data matrix
 
 # 6.2b
 
-missing_values = as.data.frame(is.na(microarray_data))
-missing_quant = (colSums(missing_values))
+missing_values = as.data.frame(is.na(microarray_data)) # Check for missing values in the microarray data and save as data frame 
+missing_quant = colSums(missing_values) # Summarize number of missing vales per colum, save data as "missing_quant"
 
-gene_names = rownames(missing_quant)
-missing_quant$gene_name = gene_names
+gene_names = names(missing_quant) # save the gene names separately
+missing_quant = unname(missing_quant) # Reomve names from "missing_quant"
+missings = cbind(gene_names, missing_quant) # Combine the "gene_names" and "missing_quant" by column, into "missings".
+missings = as.data.frame(missings) # make "missings" into a data frame. 
+missings$missing_quant = as.numeric(missings$missing_quant) # make the column "missing_quant" to a numeric.
 
-missing_quant_df = missing_quant
+ggplot(missings, aes(missing_quant))+ # plot the missing_quant
+  geom_histogram() # present the data in a histogram. 
+    # This is how I would visualize this data. If, however, if we are supposed to present each gene individually. I would present it as a scatter plot instead, see below. This is, in my opinion very messy not a good figure.
 
-ggplot(missing_quant, aes(missing_quant$gene_name, missing_quant_df$`colSums(missing_values)`))+
-  geom_point()+
-  theme_classic()
+ggplot(missings, aes(y = missing_quant, x = gene_names))+
+  geom_point()
 
 # 6.2c
 
